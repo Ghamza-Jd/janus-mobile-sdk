@@ -1,0 +1,23 @@
+pub fn init_logger() {
+    #[cfg(target_os = "android")]
+    {
+        android_logger::init_once(
+            android_logger::Config::default()
+                .with_max_level(log::LevelFilter::Trace)
+                .with_tag("Jarust"),
+        );
+    }
+
+    #[cfg(target_os = "ios")]
+    {
+        let logger = oslog::OsLogger::new("com.jarust")
+            .level_filter(log::LevelFilter::Debug)
+            .init();
+        match logger {
+            Ok(()) => {}
+            Err(why) => log::error!("{why}"),
+        };
+    }
+
+    log_panics::init();
+}
