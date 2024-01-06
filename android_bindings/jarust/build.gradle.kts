@@ -1,14 +1,16 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+//    id("org.mozilla.rust-android-gradle.rust-android")
 }
 
 android {
     namespace = "com.ghamza.jarust"
-    compileSdk = 34
+    compileSdk = GradleConfigs.compileSdk
+    ndkVersion = GradleConfigs.ndkVersion
 
     defaultConfig {
-        minSdk = 24
+        minSdk = GradleConfigs.minSdk
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -28,5 +30,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.jna)
 }
