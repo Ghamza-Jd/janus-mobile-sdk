@@ -1,0 +1,1 @@
+/Users/hamzajadid/Workspace/jarust-mobile-sdk/android_bindings/buildSrc/build/classes/kotlin/main/GradleConfigs.class
