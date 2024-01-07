@@ -4,3 +4,7 @@ plugins {
     id("com.android.library") version "8.2.1" apply false
     id("org.mozilla.rust-android-gradle.rust-android") version "0.9.3" apply true
 }
+
+tasks.create<Delete>("clean") {
+    delete(rootProject.buildDir)
+}
