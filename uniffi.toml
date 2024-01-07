@@ -4,4 +4,4 @@ ffi_module_name = "JarustNative"
 
 [bindings.kotlin]
 cdylib_name = "jarust"
-package_name = "com.jarust.internal"
+package_name = "com.ghamza.jarust.internal"
