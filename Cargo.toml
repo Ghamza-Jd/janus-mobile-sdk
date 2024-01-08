@@ -13,6 +13,8 @@ jarust = "0.1.2"
 jarust_plugins = "0.1.2"
 log = "0.4.20"
 log-panics = "2.1.0"
+
+# Couldn't make the latest uniffi work
 uniffi = { version = "0.23.0", features = ["cli"] }
 
 [build-dependencies]
@@ -21,6 +23,6 @@ uniffi = { version = "0.23.0", features = ["build"] }
 [target.'cfg(target_os = "ios")'.dependencies]
 oslog = "0.2.0"
 
-[target.'cfg(target_os="android")'.dependencies]
+[target.'cfg(target_os = "android")'.dependencies]
 android_logger = "0.13.3"
-openssl-sys = "0.9.98"
+openssl-sys = { version = "0.9.98", features = ["vendored"] }
