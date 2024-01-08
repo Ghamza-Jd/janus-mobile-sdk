@@ -36,7 +36,7 @@ cargo {
     module  = CargoConfigs.modulePath
     targets = listOf("arm64", "arm", "x86_64", "x86")
     libname = CargoConfigs.libName
-    profile = "release"
+    profile = CargoConfigs.profile
     pythonCommand = CargoConfigs.pythonCommand
 }
 

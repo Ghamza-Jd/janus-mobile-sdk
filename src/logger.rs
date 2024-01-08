@@ -19,5 +19,6 @@ pub fn init_logger() {
         };
     }
 
+    log::info!("Jarust started logging");
     log_panics::init();
 }
