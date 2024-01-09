@@ -1,16 +1,35 @@
-android_targets = armv7-linux-androideabi \
-	i686-linux-android \
-	aarch64-linux-android \
-	x86_64-linux-android
+android_make = android.Makefile
+ios_make = ios.Makefile
+
+.PHONY: help
+
+help:
+	@echo "Usage:"
+	@echo "  make <command>"
+	@echo ""
+	@echo "Commands:"
+	@echo " Android:"
+	@echo " ========"
+	@echo "  android-setup      Install android build targets"
+	@echo "  android-clean      Clean android build directory"
+	@echo "  android-bindgen    Generate kotlin bindings"
+	@echo "  android-build      Generate android archive"
+	@echo ""
+	@echo " iOS:"
+	@echo " ===="
+	@echo "  ios-setup          Install ios build targets"
 
 android-setup:
-	@rustup target add ${android_targets}
+	@make -f ${android_make} setup
 
 android-clean:
-	@cd ./android_bindings && ./gradlew clean
+	@make -f ${android_make} clean
 
 android-bindgen:
-	@cargo run -- generate ./src/jarust.udl --language kotlin --out-dir ./android_bindings/jarust/src/main/java
+	@make -f ${android_make} bindgen
 
 android-build:
-	@cd ./android_bindings && ./gradlew jarust:assembleRelease
+	@make -f ${android_make} build
+
+ios-setup:
+	@make -f ${ios_make} setup
