@@ -47,10 +47,18 @@
 		D97748462B4D4064006B2BFC /* jarust */ = {
 			isa = PBXGroup;
 			children = (
+				D97748502B4D4ED0006B2BFC /* internal */,
 				D97748472B4D4064006B2BFC /* jarust.h */,
 				D97748482B4D4064006B2BFC /* jarust.docc */,
 			);
 			path = jarust;
+			sourceTree = "<group>";
+		};
+		D97748502B4D4ED0006B2BFC /* internal */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -33,3 +33,6 @@ android-build:
 
 ios-setup:
 	@make -f ${ios_make} setup
+
+ios-bindgen:
+	@make -f ${ios_make} bindgen
