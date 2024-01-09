@@ -36,3 +36,6 @@ ios-setup:
 
 ios-bindgen:
 	@make -f ${ios_make} bindgen
+
+ios-build:
+	@make -f ${ios_make} build

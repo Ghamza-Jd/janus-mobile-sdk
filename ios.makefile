@@ -15,3 +15,8 @@ bindgen:
 	cargo run -- generate ${src_dir} --language swift --out-dir ${out_dir}
 	@mv ${out_dir}/${module_name}.modulemap ${out_dir}/module.modulemap
 	@cp ${out_dir}/${libname}.swift ${internal_dir}/${libname}.swift
+
+build:
+	@for tar in ${targets} ; do \
+		cargo build --release --target $$tar ; \
+	done
