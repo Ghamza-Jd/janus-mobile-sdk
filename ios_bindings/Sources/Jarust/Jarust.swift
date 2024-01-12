@@ -320,9 +320,9 @@ fileprivate struct FfiConverterString: FfiConverter {
 
 public func `initLogger`()  {
     try!
-    
+
     rustCall() {
-    
+
     jarust_f30a_init_logger($0)
 }
 }

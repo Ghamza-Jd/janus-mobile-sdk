@@ -20,7 +20,6 @@ setup:
 bindgen:
 	cargo run -- generate ${src_dir} --language swift --out-dir ${out_dir}
 	@mv ${out_dir}/${module_name}.modulemap ${out_dir}/module.modulemap
-	@cp ${out_dir}/${libname}.swift ${internal_dir}/${libname}.swift
 
 build:
 	@mkdir -p ${staticlib_out_dir}
@@ -36,3 +35,14 @@ build:
 		-output ${simstaticlib_out_dir}/${archive_name}
 
 	@cp ${arm64_tar_dir}/${archive_name} ${staticlib_out_dir}/${archive_name}
+
+bundle:
+	@xcodebuild -create-xcframework \
+		-library ${staticlib_out_dir}/libjarust.a \
+		-headers ${out_dir} \
+		-library ${simstaticlib_out_dir}/libjarust.a \
+		-headers ${out_dir} \
+		-output ./target/jarust_custom/ios/JarustNative.xcframework
+	@zip -r JarustNative.zip ./target/jarust_custom/ios/JarustNative.xcframework
+	@openssl dgst -sha256 JarustNative.zip
+	@mv JarustNative.zip ./target/jarust_custom/ios/JarustNative.zip
