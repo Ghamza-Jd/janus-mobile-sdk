@@ -12,12 +12,18 @@ let package = Package(
         .library(name: "Jarust", targets: ["Jarust"]),
     ],
     targets: [
-        .target(name: "Jarust", dependencies: ["JarustNative"]),
+        .target(
+            name: "Jarust",
+            dependencies: ["JarustNative"],
+        ),
         .binaryTarget(
             name: "JarustNative",
-            url: "https://github.com/Ghamza-Jd/jarust-mobile-sdk/releases/download/v0.1.0/JarustNative.zip", 
+            url: "https://github.com/Ghamza-Jd/jarust-mobile-sdk/releases/download/v0.1.0/JarustNative.zip",
             checksum: "e811e5cb123131d3d4ccc2836834e276424a6e86d8e1402f57d8c04eb6b46a1d"
         ),
-        .testTarget(name: "JarustTests", dependencies: ["Jarust"]),
+        .testTarget(
+            name: "JarustTests",
+            dependencies: ["Jarust"],
+        ),
     ]
 )
