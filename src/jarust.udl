@@ -1,3 +1,19 @@
 namespace jarust {
     void init_logger();
 };
+
+dictionary JaConfig {
+    string uri;
+    string? apisecret;
+    string? root_namespace;
+};
+
+interface JaConnection {
+    constructor();
+    void connect(JaConfig config, JaCallback success_cb, JaCallback failure_cb);
+};
+
+callback interface JaCallback {
+    void on_connection_success();
+    void on_connection_failure();
+};
