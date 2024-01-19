@@ -13,6 +13,8 @@ jarust = "0.1.2"
 jarust_plugins = "0.1.2"
 log = "0.4.20"
 log-panics = "2.1.0"
+thiserror = "1.0.56"
+tokio = { version = "1.35.1", features = ["rt", "rt-multi-thread"] }
 
 # Couldn't make the latest uniffi work
 uniffi = { version = "0.23.0", features = ["cli"] }

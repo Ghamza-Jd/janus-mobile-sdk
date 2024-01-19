@@ -9,11 +9,17 @@ dictionary JaConfig {
 };
 
 interface JaConnection {
+    [Throws=JaError]
     constructor();
-    void connect(JaConfig config, JaCallback success_cb, JaCallback failure_cb);
+    void connect(JaConfig config, JaCallback cb);
 };
 
 callback interface JaCallback {
     void on_connection_success();
     void on_connection_failure();
+};
+
+[Error]
+enum JaError {
+    "RuntimeCreationFailure",
 };
