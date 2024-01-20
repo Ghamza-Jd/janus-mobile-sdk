@@ -1,4 +1,4 @@
-pub fn init_logger() {
+pub fn raw_jarust_init_logger() {
     #[cfg(target_os = "android")]
     {
         android_logger::init_once(
