@@ -2,24 +2,24 @@ namespace jarust {
     void init_logger();
 };
 
-dictionary JaConfig {
+dictionary RawJaConfig {
     string uri;
     string? apisecret;
     string? root_namespace;
 };
 
-interface JaConnection {
-    [Throws=JaError]
+interface RawJaConnection {
+    [Throws=RawJaError]
     constructor();
-    void connect(JaConfig config, JaCallback cb);
+    void connect(RawJaConfig config, RawJaCallback cb);
 };
 
-callback interface JaCallback {
+callback interface RawJaCallback {
     void on_connection_success();
     void on_connection_failure();
 };
 
 [Error]
-enum JaError {
+enum RawJaError {
     "RuntimeCreationFailure",
 };
