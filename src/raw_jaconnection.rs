@@ -1,31 +1,31 @@
-use crate::jacallback::JaCallback;
-use crate::jaconfig::JaConfig;
-use crate::jaerror::JaError;
+use crate::raw_jacallback::RawJaCallback;
+use crate::raw_jaconfig::RawJaConfig;
+use crate::raw_jaerror::RawJaError;
 use jarust::connect as jarust_connect;
-use jarust::jaconfig::JaConfig as JarustConfig;
+use jarust::jaconfig::JaConfig;
 use jarust::jaconfig::TransportType;
 
-pub struct JaConnection {
+pub struct RawJaConnection {
     rt: tokio::runtime::Runtime,
 }
 
-impl JaConnection {
-    pub fn new() -> Result<Self, JaError> {
+impl RawJaConnection {
+    pub fn new() -> Result<Self, RawJaError> {
         let Ok(rt) = tokio::runtime::Builder::new_multi_thread()
             .worker_threads(1)
             .thread_name("jarust-scheduler")
             .enable_all()
             .build()
         else {
-            return Err(JaError::RuntimeCreationFailure);
+            return Err(RawJaError::RuntimeCreationFailure);
         };
 
         Ok(Self { rt })
     }
 
-    pub fn connect(&self, config: JaConfig, cb: Box<dyn JaCallback>) {
+    pub fn connect(&self, config: RawJaConfig, cb: Box<dyn RawJaCallback>) {
         let root_namespace = config.root_namespace.unwrap_or(String::from("janus"));
-        let config = JarustConfig::new(
+        let config = JaConfig::new(
             &config.uri,
             config.apisecret,
             TransportType::Wss,
