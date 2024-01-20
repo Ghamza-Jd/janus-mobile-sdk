@@ -1,13 +1,32 @@
+mod callback;
+mod config;
+mod connection;
+mod context;
+mod error;
 mod logger;
-mod raw_jacallback;
-mod raw_jaconfig;
-mod raw_jaconnection;
-mod raw_jaerror;
 
-use crate::logger::init_logger;
-use crate::raw_jacallback::RawJaCallback;
-use crate::raw_jaconfig::RawJaConfig;
-use crate::raw_jaconnection::RawJaConnection;
-use crate::raw_jaerror::RawJaError;
+use crate::callback::RawJaCallback;
+use crate::config::RawJaConfig;
+use crate::connection::RawJaConnection;
+use crate::context::RawJaContext;
+use crate::error::RawJaError;
+use crate::logger::raw_jarust_init_logger;
+use std::sync::Arc;
+
+pub fn raw_jarust_connect(ctx: Arc<RawJaContext>, config: RawJaConfig, cb: Box<dyn RawJaCallback>) {
+    let root_namespace = config.root_namespace.unwrap_or(String::from("janus"));
+    let config = jarust::jaconfig::JaConfig::new(
+        &config.uri,
+        config.apisecret,
+        jarust::jaconfig::TransportType::Wss,
+        &root_namespace,
+    );
+    ctx.rt.spawn(async move {
+        match jarust::connect(config).await {
+            Ok(_) => cb.on_connection_success(Arc::new(RawJaConnection)),
+            Err(_) => cb.on_connection_failure(),
+        }
+    });
+}
 
 uniffi::include_scaffolding!("jarust");

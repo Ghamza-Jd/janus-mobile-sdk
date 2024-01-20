@@ -1,5 +1,11 @@
 namespace jarust {
-    void init_logger();
+    void raw_jarust_init_logger();
+    void raw_jarust_connect(RawJaContext ctx, RawJaConfig config, RawJaCallback cb);
+};
+
+interface RawJaContext {
+    [Throws=RawJaError]
+    constructor();
 };
 
 dictionary RawJaConfig {
@@ -8,14 +14,10 @@ dictionary RawJaConfig {
     string? root_namespace;
 };
 
-interface RawJaConnection {
-    [Throws=RawJaError]
-    constructor();
-    void connect(RawJaConfig config, RawJaCallback cb);
-};
+interface RawJaConnection { };
 
 callback interface RawJaCallback {
-    void on_connection_success();
+    void on_connection_success(RawJaConnection connection);
     void on_connection_failure();
 };
 
