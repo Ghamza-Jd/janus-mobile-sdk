@@ -46,3 +46,7 @@ bundle:
 	@zip -r JarustNative.zip ./target/jarust_custom/ios/JarustNative.xcframework
 	@openssl dgst -sha256 JarustNative.zip
 	@mv JarustNative.zip ./target/jarust_custom/ios/JarustNative.zip
+
+clean:
+	@rm -rf ./target/jarust_custom/ios/JarustNative.xcframework
+	@rm -rf ./target/jarust_custom/ios/JarustNative.zip

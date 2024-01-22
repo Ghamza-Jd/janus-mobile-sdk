@@ -42,3 +42,6 @@ ios-build:
 
 ios-bundle:
 	@make -f ${ios_make} bundle
+
+ios-clean:
+	@make -f ${ios_make} clean
