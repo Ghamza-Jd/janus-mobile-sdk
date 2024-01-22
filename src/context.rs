@@ -8,7 +8,7 @@ impl RawJaContext {
     pub fn new() -> Result<Self, RawJaError> {
         let Ok(rt) = tokio::runtime::Builder::new_multi_thread()
             .worker_threads(1)
-            .thread_name("jarust-scheduler")
+            .thread_name("jarust-runtime-worker")
             .enable_all()
             .build()
         else {
