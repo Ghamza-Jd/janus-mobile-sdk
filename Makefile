@@ -18,6 +18,9 @@ help:
 	@echo " iOS:"
 	@echo " ===="
 	@echo "  ios-setup          Install ios build targets"
+	@echo "  ios-clean          Clean iOS xcframework and zip"
+	@echo "  ios-bindgen        Generate swift bindings"
+	@echo "  ios-bundle         Create xcframework from archives (.a files)"
 
 android-setup:
 	@make -f ${android_make} setup
