@@ -9,8 +9,8 @@ name = "jarust"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-jarust = "0.1.2"
-jarust_plugins = "0.1.2"
+jarust = "0.1.3"
+jarust_plugins = "0.1.3"
 log = "0.4.20"
 log-panics = "2.1.0"
 thiserror = "1.0.56"

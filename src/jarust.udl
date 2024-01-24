@@ -15,7 +15,7 @@ dictionary RawJaConfig {
 };
 
 interface RawJaConnection {
-    void create(u32 ka_interval, RawJaConnectionCallback cb);
+    void create(RawJaContext ctx, u32 ka_interval, RawJaConnectionCallback cb);
 };
 
 interface RawJaSession { };
