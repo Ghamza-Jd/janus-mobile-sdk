@@ -21,15 +21,10 @@ pub fn raw_jarust_connect(
     cb: Box<dyn RawJaConnectionCallback>,
 ) {
     let root_namespace = config.root_namespace.unwrap_or(String::from("janus"));
-    let config = jarust::jaconfig::JaConfig::new(
-        &config.uri,
-        config.apisecret,
-        jarust::jaconfig::TransportType::Wss,
-        &root_namespace,
-    );
+    let config = jarust::jaconfig::JaConfig::new(&config.uri, config.apisecret, &root_namespace);
     ctx.rt.spawn(async move {
-        match jarust::connect(config).await {
-            Ok(_) => cb.on_connection_success(Arc::new(RawJaConnection)),
+        match jarust::connect(config, jarust::jaconfig::TransportType::Wss).await {
+            Ok(conn) => cb.on_connection_success(Arc::new(RawJaConnection::new(conn))),
             Err(_) => cb.on_connection_failure(),
         }
     });
