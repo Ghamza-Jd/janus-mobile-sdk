@@ -3,14 +3,17 @@ mod config;
 mod connection;
 mod context;
 mod error;
+mod handle;
 mod logger;
 mod session;
 
 use crate::callback::RawJaConnectionCallback;
+use crate::callback::RawJaSessionCallback;
 use crate::config::RawJaConfig;
 use crate::connection::RawJaConnection;
 use crate::context::RawJaContext;
 use crate::error::RawJaError;
+use crate::handle::RawJaHandle;
 use crate::logger::raw_jarust_init_logger;
 use crate::session::RawJaSession;
 use std::sync::Arc;

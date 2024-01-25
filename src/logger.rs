@@ -11,7 +11,7 @@ pub fn raw_jarust_init_logger() {
     #[cfg(target_os = "ios")]
     {
         let logger = oslog::OsLogger::new("com.jarust")
-            .level_filter(log::LevelFilter::Debug)
+            .level_filter(log::LevelFilter::Trace)
             .init();
         match logger {
             Ok(()) => {}
