@@ -18,13 +18,22 @@ interface RawJaConnection {
     void create(RawJaContext ctx, u32 ka_interval, RawJaConnectionCallback cb);
 };
 
-interface RawJaSession { };
+interface RawJaSession {
+    void attach(RawJaContext ctx, string plugin_id, RawJaSessionCallback cb);
+};
+
+interface RawJaHandle { };
 
 callback interface RawJaConnectionCallback {
     void on_connection_success(RawJaConnection connection);
     void on_connection_failure();
     void on_session_creation_success(RawJaSession session);
     void on_session_creation_failure();
+};
+
+callback interface RawJaSessionCallback {
+    void on_attach_success(RawJaHandle handle);
+    void on_attach_failure();
 };
 
 [Error]
