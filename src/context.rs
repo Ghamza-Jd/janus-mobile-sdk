@@ -5,10 +5,14 @@ pub struct RawJaContext {
 }
 
 impl RawJaContext {
-    pub fn new() -> Result<Self, RawJaError> {
+    pub fn new(num_workers: Option<u8>, name: Option<String>) -> Result<Self, RawJaError> {
+        let num_workers = num_workers.unwrap_or(1);
+        let num_workers = if num_workers == 0 { 1 } else { num_workers };
+        let name = name.unwrap_or(String::from("jarust-runtime-worker"));
+
         let Ok(rt) = tokio::runtime::Builder::new_multi_thread()
-            .worker_threads(1)
-            .thread_name("jarust-runtime-worker")
+            .worker_threads(num_workers.into())
+            .thread_name(&name)
             .enable_all()
             .build()
         else {

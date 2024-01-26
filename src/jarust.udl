@@ -5,7 +5,7 @@ namespace jarust {
 
 interface RawJaContext {
     [Throws=RawJaError]
-    constructor();
+    constructor(u8? num_workers, string? name);
 };
 
 dictionary RawJaConfig {
