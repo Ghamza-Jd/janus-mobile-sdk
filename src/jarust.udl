@@ -22,7 +22,10 @@ interface RawJaSession {
     void attach(RawJaContext ctx, string plugin_id, RawJaSessionCallback cb);
 };
 
-interface RawJaHandle { };
+interface RawJaHandle {
+    void message(RawJaContext ctx, string message);
+    void assign_handler(RawJaContext ctx, RawJaEventsCallback cb);
+};
 
 callback interface RawJaConnectionCallback {
     void on_connection_success(RawJaConnection connection);
@@ -34,6 +37,10 @@ callback interface RawJaConnectionCallback {
 callback interface RawJaSessionCallback {
     void on_attach_success(RawJaHandle handle);
     void on_attach_failure();
+};
+
+callback interface RawJaEventsCallback {
+    void on_event(string event);
 };
 
 [Error]

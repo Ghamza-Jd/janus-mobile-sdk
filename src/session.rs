@@ -23,7 +23,9 @@ impl RawJaSession {
         let session = self.session.clone();
         ctx.rt.spawn(async move {
             match session.attach(&plugin_id).await {
-                Ok((handle, _)) => cb.on_attach_success(Arc::new(RawJaHandle::new(handle))),
+                Ok((handle, receiver)) => {
+                    cb.on_attach_success(Arc::new(RawJaHandle::new(handle, receiver)))
+                }
                 Err(_) => cb.on_attach_failure(),
             }
         });
