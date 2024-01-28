@@ -16,3 +16,7 @@ pub trait RawJaSessionCallback: Send + Sync + Debug {
     fn on_attach_success(&self, handle: Arc<RawJaHandle>);
     fn on_attach_failure(&self);
 }
+
+pub trait RawJaEventsCallback: Send + Sync + Debug {
+    fn on_event(&self, event: String);
+}

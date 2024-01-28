@@ -8,6 +8,7 @@ mod logger;
 mod session;
 
 use crate::callback::RawJaConnectionCallback;
+use crate::callback::RawJaEventsCallback;
 use crate::callback::RawJaSessionCallback;
 use crate::config::RawJaConfig;
 use crate::connection::RawJaConnection;
