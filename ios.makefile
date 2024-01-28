@@ -4,10 +4,9 @@ targets = aarch64-apple-ios \
 
 src_dir = ./src/jarust.udl
 out_dir = ./target/jarust_custom/ios/bindings/headers
+ios_target_dir = ./target/jarust_custom/ios
 module_name = JarustNative
-libname = jarust
 archive_name = libjarust.a
-internal_dir = ./ios_bindings/jarust/internal
 staticlib_out_dir = ./target/jarust_custom/ios/static-lib/ios
 simstaticlib_out_dir = ./target/jarust_custom/ios/static-lib/ios-sim
 x86_64_tar_dir = ./target/x86_64-apple-ios/release
@@ -38,15 +37,15 @@ build:
 
 bundle:
 	@xcodebuild -create-xcframework \
-		-library ${staticlib_out_dir}/libjarust.a \
+		-library ${staticlib_out_dir}/${archive_name} \
 		-headers ${out_dir} \
-		-library ${simstaticlib_out_dir}/libjarust.a \
+		-library ${simstaticlib_out_dir}/${archive_name} \
 		-headers ${out_dir} \
-		-output ./target/jarust_custom/ios/JarustNative.xcframework
-	@zip -r JarustNative.zip ./target/jarust_custom/ios/JarustNative.xcframework
-	@openssl dgst -sha256 JarustNative.zip
-	@mv JarustNative.zip ./target/jarust_custom/ios/JarustNative.zip
+		-output ${ios_target_dir}/${module_name}.xcframework
+	@zip -r ${module_name}.zip ${ios_target_dir}/${module_name}.xcframework
+	@openssl dgst -sha256 ${module_name}.zip
+	@mv ${module_name}.zip ${ios_target_dir}/${module_name}.zip
 
 clean:
-	@rm -rf ./target/jarust_custom/ios/JarustNative.xcframework
-	@rm -rf ./target/jarust_custom/ios/JarustNative.zip
+	@rm -rf ${ios_target_dir}/${module_name}.xcframework
+	@rm -rf ${ios_target_dir}/${module_name}.zip
