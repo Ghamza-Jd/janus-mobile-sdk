@@ -13,6 +13,10 @@ x86_64_tar_dir = ./target/x86_64-apple-ios/release
 arm64_tar_dir = ./target/aarch64-apple-ios/release
 simarm64_tar_dir = ./target/aarch64-apple-ios-sim/release
 
+.PHONY: all
+
+all: clean build bindgen bundle
+
 setup:
 	@rustup target add ${targets}
 

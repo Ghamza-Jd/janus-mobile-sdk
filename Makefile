@@ -17,6 +17,7 @@ help:
 	@echo ""
 	@echo " iOS:"
 	@echo " ===="
+	@echo "  ios                Clean, build, bindgen and bundle"
 	@echo "  ios-setup          Install ios build targets"
 	@echo "  ios-clean          Clean iOS xcframework and zip"
 	@echo "  ios-bindgen        Generate swift bindings"
@@ -33,6 +34,9 @@ android-bindgen:
 
 android-build:
 	@make -f ${android_make} build
+
+ios:
+	@make -f ${ios_make}
 
 ios-setup:
 	@make -f ${ios_make} setup
