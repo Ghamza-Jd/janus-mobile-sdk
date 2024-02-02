@@ -9,8 +9,8 @@ name = "jarust"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-jarust = "0.1.4"
-jarust_plugins = "0.1.4"
+jarust = "0.1.5"
+jarust_plugins = "0.1.5"
 log = "0.4.20"
 log-panics = "2.1.0"
 serde = "1.0.196"
@@ -29,4 +29,3 @@ oslog = "0.2.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = "0.13.3"
-openssl-sys = { version = "0.9.98", features = ["vendored"] }
