@@ -6,6 +6,10 @@ targets = armv7-linux-androideabi \
 src_dir = ./src/jarust.udl
 out_dir = ./android_bindings/jarust/src/main/java
 
+.PHONY: all
+
+all: clean build
+
 setup:
 	@rustup target add ${targets}
 

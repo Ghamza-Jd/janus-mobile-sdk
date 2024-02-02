@@ -10,6 +10,7 @@ help:
 	@echo "Commands:"
 	@echo " Android:"
 	@echo " ========"
+	@echo "  android            Clean and build"
 	@echo "  android-setup      Install android build targets"
 	@echo "  android-clean      Clean android build directory"
 	@echo "  android-bindgen    Generate kotlin bindings"
@@ -22,6 +23,9 @@ help:
 	@echo "  ios-clean          Clean iOS xcframework and zip"
 	@echo "  ios-bindgen        Generate swift bindings"
 	@echo "  ios-bundle         Create xcframework from archives (.a files)"
+
+android:
+	@make -f ${android_make}
 
 android-setup:
 	@make -f ${android_make} setup
