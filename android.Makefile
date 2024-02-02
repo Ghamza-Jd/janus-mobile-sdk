@@ -4,7 +4,8 @@ targets = armv7-linux-androideabi \
 	x86_64-linux-android
 
 src_dir = ./src/jarust.udl
-out_dir = ./android_bindings/jarust/src/main/java
+out_dir = ./jarust-android-package/jarust/src/main/java
+package_dir = ./jarust-android-package
 
 .PHONY: all
 
@@ -14,10 +15,10 @@ setup:
 	@rustup target add ${targets}
 
 clean:
-	@cd ./android_bindings && ./gradlew clean
+	@cd ${package_dir} && ./gradlew clean
 
 bindgen:
 	cargo run -- generate ${src_dir} --language kotlin --out-dir ${out_dir}
 
 build:
-	@cd ./android_bindings && ./gradlew :jarust:assembleRelease
+	@cd ${package_dir} && ./gradlew :jarust:assembleRelease
