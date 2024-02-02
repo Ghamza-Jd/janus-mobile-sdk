@@ -1,3 +1,6 @@
 [submodule "jarust-ios-package"]
 	path = jarust-ios-package
 	url = https://github.com/Ghamza-Jd/jarust-ios-package.git
+[submodule "jarust-android-package"]
+	path = jarust-android-package
+	url = https://github.com/Ghamza-Jd/jarust-android-package.git
