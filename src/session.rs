@@ -30,4 +30,21 @@ impl RawJaSession {
             }
         });
     }
+
+    pub fn attach_echotest(
+        &self,
+        ctx: Arc<RawJaContext>,
+        plugin_id: String,
+        cb: Box<dyn RawJaSessionCallback>,
+    ) {
+        let session = self.session.clone();
+        ctx.rt.spawn(async move {
+            match session.attach(&plugin_id).await {
+                Ok((handle, receiver)) => {
+                    cb.on_attach_success(Arc::new(RawJaHandle::new(handle, receiver)))
+                }
+                Err(_) => cb.on_attach_failure(),
+            }
+        });
+    }
 }

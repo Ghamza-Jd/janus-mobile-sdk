@@ -20,11 +20,16 @@ interface RawJaConnection {
 
 interface RawJaSession {
     void attach(RawJaContext ctx, string plugin_id, RawJaSessionCallback cb);
+    void attach_echotest(RawJaContext ctx, string plugin_id, RawJaSessionCallback cb);
 };
 
 interface RawJaHandle {
     void message(RawJaContext ctx, string message);
     void assign_handler(RawJaContext ctx, RawJaEventsCallback cb);
+};
+
+interface RawEchotestHandle {
+    void start(RawJaContext ctx);
 };
 
 callback interface RawJaConnectionCallback {
@@ -37,6 +42,9 @@ callback interface RawJaConnectionCallback {
 callback interface RawJaSessionCallback {
     void on_attach_success(RawJaHandle handle);
     void on_attach_failure();
+
+    void on_attach_echotest_success(RawEchotestHandle handle);
+    void on_attach_echotest_failure();
 };
 
 callback interface RawJaEventsCallback {

@@ -5,6 +5,7 @@ mod context;
 mod error;
 mod handle;
 mod logger;
+mod plugins;
 mod session;
 
 use crate::callback::RawJaConnectionCallback;
@@ -16,6 +17,7 @@ use crate::context::RawJaContext;
 use crate::error::RawJaError;
 use crate::handle::RawJaHandle;
 use crate::logger::raw_jarust_init_logger;
+use crate::plugins::echotest::RawEchotestHandle;
 use crate::session::RawJaSession;
 use std::sync::Arc;
 
