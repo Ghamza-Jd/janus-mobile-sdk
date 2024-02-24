@@ -12,6 +12,7 @@ simstaticlib_out_dir = ./target/jarust_custom/ios/static-lib/ios-sim
 x86_64_tar_dir = ./target/x86_64-apple-ios/release
 arm64_tar_dir = ./target/aarch64-apple-ios/release
 simarm64_tar_dir = ./target/aarch64-apple-ios-sim/release
+pkg_dir = ./jarust-ios-package
 
 .PHONY: all
 
@@ -53,3 +54,6 @@ bundle:
 clean:
 	@rm -rf ${ios_target_dir}/${module_name}.xcframework
 	@rm -rf ${ios_target_dir}/${module_name}.zip
+
+cp-pkg:
+	@cp ${ios_target_dir}/${module_name}.zip ${pkg_dir}/${module_name}.zip

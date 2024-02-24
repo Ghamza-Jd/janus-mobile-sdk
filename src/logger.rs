@@ -1,4 +1,14 @@
+use tracing_subscriber::EnvFilter;
+
 pub fn raw_jarust_init_logger() {
+    tracing_subscriber::fmt()
+        .with_ansi(false)
+        .with_env_filter(
+            EnvFilter::from_default_env().add_directive("jarust=trace".parse().unwrap()),
+        )
+        .compact()
+        .init();
+
     #[cfg(target_os = "android")]
     {
         android_logger::init_once(
@@ -15,10 +25,10 @@ pub fn raw_jarust_init_logger() {
             .init();
         match logger {
             Ok(()) => {}
-            Err(why) => log::error!("{why}"),
+            Err(why) => tracing::error!("{why}"),
         };
     }
 
-    log::info!("Jarust started logging");
+    tracing::info!("Jarust started logging");
     log_panics::init();
 }
