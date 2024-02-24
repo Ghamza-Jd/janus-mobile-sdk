@@ -21,8 +21,10 @@ help:
 	@echo "  ios                Clean, build, bindgen and bundle"
 	@echo "  ios-setup          Install ios build targets"
 	@echo "  ios-clean          Clean iOS xcframework and zip"
+	@echo "  ios-build          Build ios archive"
 	@echo "  ios-bindgen        Generate swift bindings"
 	@echo "  ios-bundle         Create xcframework from archives (.a files)"
+	@echo "  ios-cp-pkg         Copy .zip to package directory (use only in dev)"
 
 android:
 	@make -f ${android_make}
@@ -56,3 +58,6 @@ ios-bundle:
 
 ios-clean:
 	@make -f ${ios_make} clean
+
+ios-cp-pkg:
+	@make -f ${ios_make} cp-pkg

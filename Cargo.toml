@@ -9,14 +9,16 @@ name = "jarust"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-jarust = "0.1.5"
-jarust_plugins = "0.1.5"
+jarust = "0.2.1"
+jarust_plugins = "0.2.1"
 log = "0.4.20"
 log-panics = "2.1.0"
 serde = "1.0.196"
 serde_json = "1.0.112"
 thiserror = "1.0.56"
 tokio = { version = "1.35.1", features = ["rt", "rt-multi-thread"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 
 # Couldn't make the latest uniffi work
 uniffi = { version = "0.23.0", features = ["cli"] }
