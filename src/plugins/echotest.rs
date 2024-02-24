@@ -21,7 +21,7 @@ impl RawEchotestHandle {
         }
     }
 
-    pub fn start(&self, ctx: Arc<RawJaContext>) {}
+    pub fn start(&self, ctx: Arc<RawJaContext>, msg: RawEchotestStartMsg) {}
 }
 
 impl Drop for RawEchotestHandle {
@@ -30,4 +30,21 @@ impl Drop for RawEchotestHandle {
             abort_handle.abort();
         }
     }
+}
+
+pub struct RawEchotestStartMsg {
+    pub audio: bool,
+    pub video: bool,
+    pub bitrate: Option<u32>,
+    pub jsep: Option<RawJsep>,
+}
+
+pub struct RawJsep {
+    pub sdp: String,
+    pub jsep_type: RawJsepType,
+}
+
+pub enum RawJsepType {
+    Offer,
+    Answer,
 }

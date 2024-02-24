@@ -29,7 +29,7 @@ interface RawJaHandle {
 };
 
 interface RawEchotestHandle {
-    void start(RawJaContext ctx);
+    void start(RawJaContext ctx, RawEchotestStartMsg msg);
 };
 
 callback interface RawJaConnectionCallback {
@@ -54,4 +54,21 @@ callback interface RawJaEventsCallback {
 [Error]
 enum RawJaError {
     "RuntimeCreationFailure",
+};
+
+dictionary RawEchotestStartMsg {
+    boolean audio;
+    boolean video;
+    u32? bitrate;
+    RawJsep? jsep;
+};
+
+dictionary RawJsep {
+    string sdp;
+    RawJsepType jsep_type;
+};
+
+enum RawJsepType {
+    "Offer",
+    "Answer"
 };

@@ -17,7 +17,7 @@ use crate::context::RawJaContext;
 use crate::error::RawJaError;
 use crate::handle::RawJaHandle;
 use crate::logger::raw_jarust_init_logger;
-use crate::plugins::echotest::RawEchotestHandle;
+use crate::plugins::echotest::*;
 use crate::session::RawJaSession;
 use std::sync::Arc;
 
