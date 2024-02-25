@@ -30,6 +30,7 @@ interface RawJaHandle {
 
 interface RawEchotestHandle {
     void start(RawJaContext ctx, RawEchotestStartMsg msg);
+    void assign_handler(RawJaContext ctx, RawEchotestEventsCallback cb);
 };
 
 callback interface RawJaConnectionCallback {
@@ -49,6 +50,10 @@ callback interface RawJaSessionCallback {
 
 callback interface RawJaEventsCallback {
     void on_event(string event);
+};
+
+callback interface RawEchotestEventsCallback {
+
 };
 
 [Error]
