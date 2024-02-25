@@ -1,6 +1,9 @@
 use crate::context::RawJaContext;
 use jarust::japrotocol::JaResponse;
+use jarust::japrotocol::Jsep;
+use jarust::japrotocol::JsepType;
 use jarust_plugins::echotest::handle::EchoTestHandle;
+use jarust_plugins::echotest::messages::EchoTestStartMsg;
 use std::sync::Arc;
 use std::sync::Mutex;
 use tokio::sync::mpsc;
@@ -21,7 +24,10 @@ impl RawEchotestHandle {
         }
     }
 
-    pub fn start(&self, ctx: Arc<RawJaContext>, msg: RawEchotestStartMsg) {}
+    pub fn start(&self, ctx: Arc<RawJaContext>, msg: RawEchotestStartMsg) {
+        let handle = self.handle.clone();
+        ctx.rt.spawn(async move {});
+    }
 }
 
 impl Drop for RawEchotestHandle {
@@ -47,4 +53,25 @@ pub struct RawJsep {
 pub enum RawJsepType {
     Offer,
     Answer,
+}
+
+impl Into<EchoTestStartMsg> for RawEchotestStartMsg {
+    fn into(self) -> EchoTestStartMsg {
+        let jsep = match self.jsep {
+            Some(raw_jsep) => Some(Jsep {
+                sdp: raw_jsep.sdp,
+                jsep_type: match raw_jsep.jsep_type {
+                    RawJsepType::Offer => JsepType::Offer,
+                    RawJsepType::Answer => JsepType::Answer,
+                },
+            }),
+            None => None,
+        };
+        EchoTestStartMsg {
+            audio: self.audio,
+            video: self.video,
+            jsep,
+            bitrate: self.bitrate,
+        }
+    }
 }
