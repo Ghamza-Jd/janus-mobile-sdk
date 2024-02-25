@@ -1,3 +1,4 @@
+use crate::callback::RawJaEventsCallback;
 use crate::context::RawJaContext;
 use jarust::japrotocol::JaResponse;
 use jarust::japrotocol::Jsep;
@@ -6,6 +7,7 @@ use jarust_plugins::echotest::handle::EchoTestHandle;
 use jarust_plugins::echotest::messages::EchoTestStartMsg;
 use std::sync::Arc;
 use std::sync::Mutex;
+use std::time::Duration;
 use tokio::sync::mpsc;
 use tokio::task::AbortHandle;
 
@@ -26,7 +28,25 @@ impl RawEchotestHandle {
 
     pub fn start(&self, ctx: Arc<RawJaContext>, msg: RawEchotestStartMsg) {
         let handle = self.handle.clone();
-        ctx.rt.spawn(async move {});
+        ctx.rt.spawn(async move {
+            _ = handle.start(msg.into(), Duration::from_secs(5)).await;
+        });
+    }
+
+    pub fn assign_handler(&self, ctx: Arc<RawJaContext>, cb: Box<dyn RawJaEventsCallback>) {
+        let Ok(Some(mut receiver)) = self.receiver.lock().map(|mut x| x.take()) else {
+            return;
+        };
+        let join_handle = ctx.rt.spawn(async move {
+            while let Some(item) = receiver.recv().await {
+                if let Ok(item) = serde_json::to_string(&item) {
+                    cb.on_event(item);
+                }
+            }
+        });
+        if let Ok(mut abort_handle) = self.abort_handle.lock() {
+            *abort_handle = Some(join_handle.abort_handle());
+        }
     }
 }
 

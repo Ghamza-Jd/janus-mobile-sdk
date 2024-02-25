@@ -42,7 +42,7 @@ impl RawJaHandle {
         let body = serde_json::from_str(&message).unwrap();
         let handle = self.handle.clone();
         ctx.rt.spawn(async move {
-            _ = handle.message(body).await;
+            _ = handle.fire_and_forget(body).await;
         });
     }
 }
