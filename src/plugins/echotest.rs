@@ -1,7 +1,7 @@
 use crate::context::RawJaContext;
-use jarust::japrotocol::JaResponse;
 use jarust::japrotocol::Jsep;
 use jarust::japrotocol::JsepType;
+use jarust_plugins::echotest::events::EchoTestPluginEvent;
 use jarust_plugins::echotest::handle::EchoTestHandle;
 use jarust_plugins::echotest::messages::EchoTestStartMsg;
 use std::fmt::Debug;
@@ -13,12 +13,12 @@ use tokio::task::AbortHandle;
 
 pub struct RawEchotestHandle {
     handle: EchoTestHandle,
-    receiver: Mutex<Option<mpsc::Receiver<JaResponse>>>,
+    receiver: Mutex<Option<mpsc::Receiver<EchoTestPluginEvent>>>,
     abort_handle: Mutex<Option<AbortHandle>>,
 }
 
 impl RawEchotestHandle {
-    pub fn new(handle: EchoTestHandle, receiver: mpsc::Receiver<JaResponse>) -> Self {
+    pub fn new(handle: EchoTestHandle, receiver: mpsc::Receiver<EchoTestPluginEvent>) -> Self {
         Self {
             handle,
             receiver: Mutex::new(Some(receiver)),
@@ -39,7 +39,11 @@ impl RawEchotestHandle {
         };
         let join_handle = ctx.rt.spawn(async move {
             while let Some(item) = receiver.recv().await {
-                if let Ok(item) = serde_json::to_string(&item) {}
+                match item {
+                    EchoTestPluginEvent::Result { echotest, result } => {
+                        cb.on_result(echotest, result)
+                    }
+                }
             }
         });
         if let Ok(mut abort_handle) = self.abort_handle.lock() {
@@ -94,4 +98,6 @@ impl Into<EchoTestStartMsg> for RawEchotestStartMsg {
     }
 }
 
-pub trait RawEchotestEventsCallback: Send + Sync + Debug {}
+pub trait RawEchotestEventsCallback: Send + Sync + Debug {
+    fn on_result(&self, echotest: String, result: String);
+}
