@@ -83,3 +83,9 @@ been added to your path by running `echo $PATH`.
 
 > Please make sure you use the correct Android SDK path. You can find the actual location of the SDK in the
 > Android Studio "Settings" dialog, under Languages & Frameworks → Android SDK.
+
+## Documentation
+
+We're using [mdbook](https://github.com/rust-lang/mdBook) as a general purpose documentation tool.
+Run `cargo install mdbook` to install it. And to run it open the docs directory in terminal and
+run `mdbook server --open`.
