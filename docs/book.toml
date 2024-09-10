@@ -12,7 +12,3 @@ git-repository-icon = "fa-github"
 
 [output.html.playground]
 runnable = false
-
-[preprocessor.plantuml]
-plantuml-cmd = "http://www.plantuml.com/plantuml"
-use-data-uris = true
