@@ -2,5 +2,28 @@
 name = "rslib"
 version = "0.1.0"
 edition = "2021"
+publish = false
+repository = "https://github.com/Ghamza-Jd/janus-mobile-sdk"
+
+[lib]
+name = "janus_gateway"
+crate-type = ["cdylib", "staticlib", "lib"]
 
 [dependencies]
+log = "0.4.22"
+log-panics = "2.1.0"
+tokio = "1.40.0"
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+uniffi = { workspace = true, features = ["tokio"] }
+
+[target.'cfg(target_os = "ios")'.dependencies]
+oslog = "0.2.0"
+
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = "0.14.1"
+# Newer versions of openssl-sys have a bug that causes the build to fail
+openssl-sys = { version = "=0.9.87", features = ["vendored"] }
+
+[build-dependencies]
+uniffi = { workspace = true, features = ["build"] }
