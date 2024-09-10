@@ -1,0 +1,66 @@
+# Contribution Guide
+
+This guide is mostly for macOS users
+
+### Android
+
+#### System Requirements
+
+##### Android Studio
+
+Follow the installation instructions on the [official website](https://developer.android.com/studio)
+
+##### Java
+
+Install java 17
+
+```shell
+brew install --cask zulu@17
+```
+
+##### NDK (native development kit)
+
+We're writing native code so NDK is required for this task, and we're using
+[cargo-ndk](https://github.com/bbqsrc/cargo-ndk)
+
+To install cargo-ndk run:
+
+```shell
+cargo install cargo-ndk
+```
+
+And add the android target triplets
+
+```shell
+rustup target add \
+    aarch64-linux-android \
+    armv7-linux-androideabi \
+    x86_64-linux-android \
+    i686-linux-android
+```
+
+And to install the NDK itself, in Android studio open `Settings` → `Languages & Frameworks` →
+`Android SDK` → `SDK Tools`
+
+Check the `Show Package Details` and pick `NDK (Side by side)` version `23.1.7779620`
+
+![android studio ndk](./android_studio_ndk.png)
+
+##### Add to Path
+
+Add the following lines to your `~/.zprofile` or `~/.zshrc` (if you are using bash, then `~/.bash_profile`
+or `~/.bashrc`) config file:
+
+```shell
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/23.1.7779620
+```
+
+Run source `~/.zprofile` (or source` ~/.bash_profile` for bash) to load the config into your current shell.
+Verify that `ANDROID_HOME` has been set by running `echo $ANDROID_HOME` and the appropriate directories have
+been added to your path by running `echo $PATH`.
+
+> Please make sure you use the correct Android SDK path. You can find the actual location of the SDK in the
+> Android Studio "Settings" dialog, under Languages & Frameworks → Android SDK.
