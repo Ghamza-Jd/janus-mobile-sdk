@@ -1,0 +1,10 @@
+[bindings.kotlin]
+android = true
+cdylib_name = "janus_gateway"
+generate_immutable_records = true
+package_name = "com.ghamza.janus.bindings"
+
+[bindings.swift]
+ffi_module_name = "JanusGatewayFFI"
+generate_immutable_records = true
+module_name = "JanusGatewayBindings"
