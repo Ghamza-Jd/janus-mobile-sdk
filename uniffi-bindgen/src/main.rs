@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    uniffi::uniffi_bindgen_main()
 }
