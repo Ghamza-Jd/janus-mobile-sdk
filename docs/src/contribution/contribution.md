@@ -2,15 +2,34 @@
 
 This guide is mostly for macOS users
 
-### Android
+## Apple
 
-#### System Requirements
+### System Requirements
 
-##### Android Studio
+It only requires `XCode` and the iOS target triplets
+
+```shell
+rustup target add \
+    aarch64-apple-ios \
+    x86_64-apple-ios \
+    aarch64-apple-ios-sim
+```
+
+### Swift Package Manager
+
+We're using SPM (swift package manager), a limitation while using an `xcframework` locally is having to specify the path,
+which doesn't play well when publishing on remote. A work around for this limitation is to set the `useLocalFramework` to
+`true` and return it back to `false` before pushing.
+
+## Android
+
+### System Requirements
+
+#### Android Studio
 
 Follow the installation instructions on the [official website](https://developer.android.com/studio)
 
-##### Java
+#### Java
 
 Install java 17
 
@@ -18,7 +37,7 @@ Install java 17
 brew install --cask zulu@17
 ```
 
-##### NDK (native development kit)
+#### NDK (native development kit)
 
 We're writing native code so NDK is required for this task, and we're using
 [cargo-ndk](https://github.com/bbqsrc/cargo-ndk)
@@ -46,7 +65,7 @@ Check the `Show Package Details` and pick `NDK (Side by side)` version `23.1.777
 
 ![android studio ndk](./android_studio_ndk.png)
 
-##### Add to Path
+#### Add to Path
 
 Add the following lines to your `~/.zprofile` or `~/.zshrc` (if you are using bash, then `~/.bash_profile`
 or `~/.bashrc`) config file:
