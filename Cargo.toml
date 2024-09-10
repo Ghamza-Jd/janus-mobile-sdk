@@ -1,0 +1,6 @@
+[workspace]
+resolver = "2"
+members = ["rslib", "uniffi-bindgen"]
+
+[workspace.dependencies]
+uniffi = "0.27.1"
