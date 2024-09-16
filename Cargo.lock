@@ -653,6 +653,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "jarust_plugins"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d59cf8298a7d18064cfee580e1773a942f4b7a1bf5a69948f8765d28370bbe9"
+dependencies = [
+ "async-trait",
+ "jarust",
+ "jarust_rt",
+ "jarust_transport",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "jarust_rt"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1081,6 +1097,7 @@ version = "0.1.0"
 dependencies = [
  "android_logger",
  "jarust",
+ "jarust_plugins",
  "jarust_transport",
  "log",
  "log-panics",
