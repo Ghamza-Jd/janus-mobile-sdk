@@ -4,4 +4,6 @@ pub enum JanusGatewayError {
     ConnectionFailure { reason: String },
     #[error("Failed to create a session with server: reason ${reason}")]
     SessionCreationFailure { reason: String },
+    #[error("Failed to attach ${plugin} handle, reason ${reason}")]
+    HandleCreationFailure { plugin: String, reason: String },
 }
