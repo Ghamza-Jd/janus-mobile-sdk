@@ -56,24 +56,31 @@ cargoNdk {
 
 afterEvaluate {
     android.libraryVariants.all { variant ->
+        val outDir = "${buildDir}/generated/source/uniffi/${variant.name}/java"
+
         val generateBindings = tasks.register(
             name = "generate${variant.name.capitalized()}UniFFIBindings",
             type = Exec::class
         ) {
             workingDir = file("../..")
-            val outDir = "${buildDir}/generated/source/uniffi/${variant.name}/java"
             commandLine(
                 "cargo", "run", "-p", "uniffi-bindgen", "generate",
                 "--library", "./android/bindings/src/main/jniLibs/arm64-v8a/libjanus_gateway.so",
                 "--language", "kotlin",
                 "--out-dir", outDir
             )
-            // For some reason this doesn't work on a fresh build, we should comment it, run it,
-            // uncomment, then run it again
-            commandLine("cp", "-r", outDir, "${projectDir}/src/main/")
             dependsOn("buildCargoNdk${variant.name.capitalized()}")
         }
-        variant.javaCompileProvider.dependsOn(generateBindings)
+
+        val copyBindings = tasks.register(
+            name = "copy${variant.name.capitalized()}UniFFIBindings",
+            type = Exec::class
+        ) {
+            workingDir = file("../..")
+            commandLine("cp", "-r", outDir, "${projectDir}/src/main/")
+            dependsOn(generateBindings)
+        }
+        variant.javaCompileProvider.dependsOn(copyBindings)
         tasks.named("compile${variant.name.capitalized()}Kotlin") { dependsOn(generateBindings) }
         tasks.named("connectedDebugAndroidTest").configure { dependsOn(generateBindings) }
         true
