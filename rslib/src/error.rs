@@ -2,4 +2,6 @@
 pub enum JanusGatewayError {
     #[error("Failed to connect to server, reason: ${reason}")]
     ConnectionFailure { reason: String },
+    #[error("Failed to create a session with server: reason ${reason}")]
+    SessionCreationFailure { reason: String },
 }
