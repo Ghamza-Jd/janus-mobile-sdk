@@ -410,6 +410,27 @@ fileprivate struct FfiConverterUInt32: FfiConverterPrimitive {
     }
 }
 
+fileprivate struct FfiConverterBool : FfiConverter {
+    typealias FfiType = Int8
+    typealias SwiftType = Bool
+
+    public static func lift(_ value: Int8) throws -> Bool {
+        return value != 0
+    }
+
+    public static func lower(_ value: Bool) -> Int8 {
+        return value ? 1 : 0
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Bool {
+        return try lift(readInt(&buf))
+    }
+
+    public static func write(_ value: Bool, into buf: inout [UInt8]) {
+        writeInt(&buf, lower(value))
+    }
+}
+
 fileprivate struct FfiConverterString: FfiConverter {
     typealias SwiftType = String
     typealias FfiType = RustBuffer
@@ -583,6 +604,157 @@ public func FfiConverterTypeConnection_lift(_ pointer: UnsafeMutableRawPointer) 
 
 public func FfiConverterTypeConnection_lower(_ value: Connection) -> UnsafeMutableRawPointer {
     return FfiConverterTypeConnection.lower(value)
+}
+
+
+
+
+public protocol EchotestHandleProtocol : AnyObject {
+    
+    func start(audio: Bool?, video: Bool?, bitrate: UInt32?) async throws 
+    
+    func startEventLoop(cb: EchotestHandleCallback) async 
+    
+    func startWithJsep(audio: Bool?, video: Bool?, bitrate: UInt32?, jsep: Jsep, timeout: TimeInterval) async throws 
+    
+}
+
+open class EchotestHandle:
+    EchotestHandleProtocol {
+    fileprivate let pointer: UnsafeMutableRawPointer!
+
+    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
+    public struct NoPointer {
+        public init() {}
+    }
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+
+    /// This constructor can be used to instantiate a fake object.
+    /// - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
+    ///
+    /// - Warning:
+    ///     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
+    public init(noPointer: NoPointer) {
+        self.pointer = nil
+    }
+
+    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
+        return try! rustCall { uniffi_janus_gateway_fn_clone_echotesthandle(self.pointer, $0) }
+    }
+    // No primary constructor declared for this class.
+
+    deinit {
+        guard let pointer = pointer else {
+            return
+        }
+
+        try! rustCall { uniffi_janus_gateway_fn_free_echotesthandle(pointer, $0) }
+    }
+
+    
+
+    
+open func start(audio: Bool?, video: Bool?, bitrate: UInt32?)async throws  {
+    return
+        try  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_janus_gateway_fn_method_echotesthandle_start(
+                    self.uniffiClonePointer(),
+                    FfiConverterOptionBool.lower(audio),FfiConverterOptionBool.lower(video),FfiConverterOptionUInt32.lower(bitrate)
+                )
+            },
+            pollFunc: ffi_janus_gateway_rust_future_poll_void,
+            completeFunc: ffi_janus_gateway_rust_future_complete_void,
+            freeFunc: ffi_janus_gateway_rust_future_free_void,
+            liftFunc: { $0 },
+            errorHandler: FfiConverterTypeJanusGatewayError.lift
+        )
+}
+    
+open func startEventLoop(cb: EchotestHandleCallback)async  {
+    return
+        try!  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_janus_gateway_fn_method_echotesthandle_start_event_loop(
+                    self.uniffiClonePointer(),
+                    FfiConverterCallbackInterfaceEchotestHandleCallback.lower(cb)
+                )
+            },
+            pollFunc: ffi_janus_gateway_rust_future_poll_void,
+            completeFunc: ffi_janus_gateway_rust_future_complete_void,
+            freeFunc: ffi_janus_gateway_rust_future_free_void,
+            liftFunc: { $0 },
+            errorHandler: nil
+            
+        )
+}
+    
+open func startWithJsep(audio: Bool?, video: Bool?, bitrate: UInt32?, jsep: Jsep, timeout: TimeInterval)async throws  {
+    return
+        try  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_janus_gateway_fn_method_echotesthandle_start_with_jsep(
+                    self.uniffiClonePointer(),
+                    FfiConverterOptionBool.lower(audio),FfiConverterOptionBool.lower(video),FfiConverterOptionUInt32.lower(bitrate),FfiConverterTypeJsep.lower(jsep),FfiConverterDuration.lower(timeout)
+                )
+            },
+            pollFunc: ffi_janus_gateway_rust_future_poll_void,
+            completeFunc: ffi_janus_gateway_rust_future_complete_void,
+            freeFunc: ffi_janus_gateway_rust_future_free_void,
+            liftFunc: { $0 },
+            errorHandler: FfiConverterTypeJanusGatewayError.lift
+        )
+}
+    
+
+}
+
+public struct FfiConverterTypeEchotestHandle: FfiConverter {
+
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = EchotestHandle
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> EchotestHandle {
+        return EchotestHandle(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: EchotestHandle) -> UnsafeMutableRawPointer {
+        return value.uniffiClonePointer()
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> EchotestHandle {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: EchotestHandle, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+}
+
+
+
+
+public func FfiConverterTypeEchotestHandle_lift(_ pointer: UnsafeMutableRawPointer) throws -> EchotestHandle {
+    return try FfiConverterTypeEchotestHandle.lift(pointer)
+}
+
+public func FfiConverterTypeEchotestHandle_lower(_ value: EchotestHandle) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeEchotestHandle.lower(value)
 }
 
 
@@ -781,6 +953,8 @@ public protocol SessionProtocol : AnyObject {
     
     func attach(pluginId: String, timeout: TimeInterval) async throws  -> Handle
     
+    func attachEchoTest(timeout: TimeInterval) async throws  -> EchotestHandle
+    
 }
 
 open class Session:
@@ -837,6 +1011,23 @@ open func attach(pluginId: String, timeout: TimeInterval)async throws  -> Handle
             completeFunc: ffi_janus_gateway_rust_future_complete_pointer,
             freeFunc: ffi_janus_gateway_rust_future_free_pointer,
             liftFunc: FfiConverterTypeHandle.lift,
+            errorHandler: FfiConverterTypeJanusGatewayError.lift
+        )
+}
+    
+open func attachEchoTest(timeout: TimeInterval)async throws  -> EchotestHandle {
+    return
+        try  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_janus_gateway_fn_method_session_attach_echo_test(
+                    self.uniffiClonePointer(),
+                    FfiConverterDuration.lower(timeout)
+                )
+            },
+            pollFunc: ffi_janus_gateway_rust_future_poll_pointer,
+            completeFunc: ffi_janus_gateway_rust_future_complete_pointer,
+            freeFunc: ffi_janus_gateway_rust_future_free_pointer,
+            liftFunc: FfiConverterTypeEchotestHandle.lift,
             errorHandler: FfiConverterTypeJanusGatewayError.lift
         )
 }
@@ -1168,9 +1359,11 @@ extension JsepType: Equatable, Hashable {}
 
 
 
-public protocol HandleCallback : AnyObject {
+public protocol EchotestHandleCallback : AnyObject {
     
-    func onEvent(event: String) 
+    func onResult(echotest: String, result: String) 
+    
+    func onResultWithJsep(echotest: String, result: String, jsep: Jsep) 
     
 }
 
@@ -1181,6 +1374,117 @@ private let IDX_CALLBACK_FREE: Int32 = 0
 private let UNIFFI_CALLBACK_SUCCESS: Int32 = 0
 private let UNIFFI_CALLBACK_ERROR: Int32 = 1
 private let UNIFFI_CALLBACK_UNEXPECTED_ERROR: Int32 = 2
+
+// Put the implementation in a struct so we don't pollute the top-level namespace
+fileprivate struct UniffiCallbackInterfaceEchotestHandleCallback {
+
+    // Create the VTable using a series of closures.
+    // Swift automatically converts these into C callback functions.
+    static var vtable: UniffiVTableCallbackInterfaceEchotestHandleCallback = UniffiVTableCallbackInterfaceEchotestHandleCallback(
+        onResult: { (
+            uniffiHandle: UInt64,
+            echotest: RustBuffer,
+            result: RustBuffer,
+            uniffiOutReturn: UnsafeMutableRawPointer,
+            uniffiCallStatus: UnsafeMutablePointer<RustCallStatus>
+        ) in
+            let makeCall = {
+                () throws -> () in
+                guard let uniffiObj = try? FfiConverterCallbackInterfaceEchotestHandleCallback.handleMap.get(handle: uniffiHandle) else {
+                    throw UniffiInternalError.unexpectedStaleHandle
+                }
+                return uniffiObj.onResult(
+                     echotest: try FfiConverterString.lift(echotest),
+                     result: try FfiConverterString.lift(result)
+                )
+            }
+
+            
+            let writeReturn = { () }
+            uniffiTraitInterfaceCall(
+                callStatus: uniffiCallStatus,
+                makeCall: makeCall,
+                writeReturn: writeReturn
+            )
+        },
+        onResultWithJsep: { (
+            uniffiHandle: UInt64,
+            echotest: RustBuffer,
+            result: RustBuffer,
+            jsep: RustBuffer,
+            uniffiOutReturn: UnsafeMutableRawPointer,
+            uniffiCallStatus: UnsafeMutablePointer<RustCallStatus>
+        ) in
+            let makeCall = {
+                () throws -> () in
+                guard let uniffiObj = try? FfiConverterCallbackInterfaceEchotestHandleCallback.handleMap.get(handle: uniffiHandle) else {
+                    throw UniffiInternalError.unexpectedStaleHandle
+                }
+                return uniffiObj.onResultWithJsep(
+                     echotest: try FfiConverterString.lift(echotest),
+                     result: try FfiConverterString.lift(result),
+                     jsep: try FfiConverterTypeJsep.lift(jsep)
+                )
+            }
+
+            
+            let writeReturn = { () }
+            uniffiTraitInterfaceCall(
+                callStatus: uniffiCallStatus,
+                makeCall: makeCall,
+                writeReturn: writeReturn
+            )
+        },
+        uniffiFree: { (uniffiHandle: UInt64) -> () in
+            let result = try? FfiConverterCallbackInterfaceEchotestHandleCallback.handleMap.remove(handle: uniffiHandle)
+            if result == nil {
+                print("Uniffi callback interface EchotestHandleCallback: handle missing in uniffiFree")
+            }
+        }
+    )
+}
+
+private func uniffiCallbackInitEchotestHandleCallback() {
+    uniffi_janus_gateway_fn_init_callback_vtable_echotesthandlecallback(&UniffiCallbackInterfaceEchotestHandleCallback.vtable)
+}
+
+// FfiConverter protocol for callback interfaces
+fileprivate struct FfiConverterCallbackInterfaceEchotestHandleCallback {
+    fileprivate static var handleMap = UniffiHandleMap<EchotestHandleCallback>()
+}
+
+extension FfiConverterCallbackInterfaceEchotestHandleCallback : FfiConverter {
+    typealias SwiftType = EchotestHandleCallback
+    typealias FfiType = UInt64
+
+    public static func lift(_ handle: UInt64) throws -> SwiftType {
+        try handleMap.get(handle: handle)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        let handle: UInt64 = try readInt(&buf)
+        return try lift(handle)
+    }
+
+    public static func lower(_ v: SwiftType) -> UInt64 {
+        return handleMap.insert(obj: v)
+    }
+
+    public static func write(_ v: SwiftType, into buf: inout [UInt8]) {
+        writeInt(&buf, lower(v))
+    }
+}
+
+
+
+
+public protocol HandleCallback : AnyObject {
+    
+    func onEvent(event: String) 
+    
+}
+
+
 
 // Put the implementation in a struct so we don't pollute the top-level namespace
 fileprivate struct UniffiCallbackInterfaceHandleCallback {
@@ -1249,6 +1553,48 @@ extension FfiConverterCallbackInterfaceHandleCallback : FfiConverter {
 
     public static func write(_ v: SwiftType, into buf: inout [UInt8]) {
         writeInt(&buf, lower(v))
+    }
+}
+
+fileprivate struct FfiConverterOptionUInt32: FfiConverterRustBuffer {
+    typealias SwiftType = UInt32?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterUInt32.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterUInt32.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+fileprivate struct FfiConverterOptionBool: FfiConverterRustBuffer {
+    typealias SwiftType = Bool?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterBool.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterBool.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
     }
 }
 
@@ -1362,6 +1708,15 @@ private var initializationResult: InitializationResult = {
     if (uniffi_janus_gateway_checksum_method_connection_create_session() != 11835) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_janus_gateway_checksum_method_echotesthandle_start() != 56630) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_janus_gateway_checksum_method_echotesthandle_start_event_loop() != 42772) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_janus_gateway_checksum_method_echotesthandle_start_with_jsep() != 36185) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_janus_gateway_checksum_method_handle_fire_and_forget() != 48978) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -1380,10 +1735,20 @@ private var initializationResult: InitializationResult = {
     if (uniffi_janus_gateway_checksum_method_session_attach() != 30742) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_janus_gateway_checksum_method_session_attach_echo_test() != 9542) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_janus_gateway_checksum_method_echotesthandlecallback_on_result() != 12927) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_janus_gateway_checksum_method_echotesthandlecallback_on_result_with_jsep() != 57945) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_janus_gateway_checksum_method_handlecallback_on_event() != 65130) {
         return InitializationResult.apiChecksumMismatch
     }
 
+    uniffiCallbackInitEchotestHandleCallback()
     uniffiCallbackInitHandleCallback()
     return InitializationResult.ok
 }()
