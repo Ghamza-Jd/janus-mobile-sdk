@@ -4,6 +4,7 @@ pub mod error;
 pub mod handle;
 pub mod japrotocol;
 pub mod logger;
+pub mod plugins;
 pub mod session;
 
 pub type JanusGatewayResult<T> = core::result::Result<T, error::JanusGatewayError>;
