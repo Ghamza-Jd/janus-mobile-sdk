@@ -781,6 +781,8 @@ internal open class UniffiVTableCallbackInterfaceHandleCallback(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -837,6 +839,8 @@ internal interface UniffiLib : Library {
     fun uniffi_janus_gateway_fn_free_session(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_janus_gateway_fn_method_session_attach(`ptr`: Pointer,`pluginId`: RustBuffer.ByValue,`timeout`: RustBuffer.ByValue,
+    ): Long
+    fun uniffi_janus_gateway_fn_method_session_attach_echo_test(`ptr`: Pointer,`timeout`: RustBuffer.ByValue,
     ): Long
     fun uniffi_janus_gateway_fn_init_callback_vtable_echotesthandlecallback(`vtable`: UniffiVTableCallbackInterfaceEchotestHandleCallback,
     ): Unit
@@ -982,6 +986,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_janus_gateway_checksum_method_session_attach(
     ): Short
+    fun uniffi_janus_gateway_checksum_method_session_attach_echo_test(
+    ): Short
     fun uniffi_janus_gateway_checksum_method_echotesthandlecallback_on_result(
     ): Short
     fun uniffi_janus_gateway_checksum_method_echotesthandlecallback_on_result_with_jsep(
@@ -1039,6 +1045,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_janus_gateway_checksum_method_session_attach() != 30742.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_janus_gateway_checksum_method_session_attach_echo_test() != 9542.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_janus_gateway_checksum_method_echotesthandlecallback_on_result() != 12927.toShort()) {
@@ -2310,6 +2319,8 @@ public interface SessionInterface {
     
     suspend fun `attach`(`pluginId`: kotlin.String, `timeout`: java.time.Duration): Handle
     
+    suspend fun `attachEchoTest`(`timeout`: java.time.Duration): EchotestHandle
+    
     companion object
 }
 
@@ -2410,6 +2421,27 @@ open class Session: Disposable, AutoCloseable, SessionInterface {
         { future -> UniffiLib.INSTANCE.ffi_janus_gateway_rust_future_free_pointer(future) },
         // lift function
         { FfiConverterTypeHandle.lift(it) },
+        // Error FFI converter
+        JanusGatewayException.ErrorHandler,
+    )
+    }
+
+    
+    @Throws(JanusGatewayException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `attachEchoTest`(`timeout`: java.time.Duration) : EchotestHandle {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_janus_gateway_fn_method_session_attach_echo_test(
+                thisPtr,
+                FfiConverterDuration.lower(`timeout`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_janus_gateway_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_janus_gateway_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_janus_gateway_rust_future_free_pointer(future) },
+        // lift function
+        { FfiConverterTypeEchotestHandle.lift(it) },
         // Error FFI converter
         JanusGatewayException.ErrorHandler,
     )
