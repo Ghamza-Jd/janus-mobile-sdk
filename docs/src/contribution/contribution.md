@@ -1,6 +1,6 @@
 # Contribution Guide
 
-This guide is mostly for macOS users
+This guide is mostly for macOS users, if you found your way to build it on windows or linux feel free to open a PR!
 
 ## Apple
 
@@ -20,6 +20,27 @@ rustup target add \
 We're using SPM (swift package manager), a limitation while using an `xcframework` locally is having to specify the path,
 which doesn't play well when publishing on remote. A work around for this limitation is to set the `useLocalFramework` to
 `true` and return it back to `false` before pushing.
+
+### Building
+
+To generate swift bindings run:
+
+```shell
+./build-ios.sh
+```
+
+This will generate the swift bindings and create an `xcframework` with the built rust static libraries.
+
+### Releasing
+
+Similar to the building command but we should pass `--release`
+
+```shell
+./build-ios.sh --release
+```
+
+This will create a ZIP archive of the `xcframework` and update `Package.swift` with the computed checksum.
+This is only needed when cutting a new release, not for local development.
 
 ## Android
 
@@ -83,6 +104,16 @@ been added to your path by running `echo $PATH`.
 
 > Please make sure you use the correct Android SDK path. You can find the actual location of the SDK in the
 > Android Studio "Settings" dialog, under Languages & Frameworks → Android SDK.
+
+### Building
+
+Change directory into the android directory and run:
+
+```shell
+./gradlew :bindings:assembleDebug
+```
+
+This will generate the kotlin bindings and link `.so` files to the `jni` directory.
 
 ## Documentation
 
