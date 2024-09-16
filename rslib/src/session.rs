@@ -2,9 +2,12 @@ use std::time::Duration;
 
 use crate::error::JanusGatewayError;
 use crate::handle::Handle;
+use crate::plugins::echotest::EchotestHandle;
 use jarust::japlugin::AttachHandleParams;
 use jarust::jasession::JaSession;
 use jarust::prelude::Attach;
+use jarust_plugins::echo_test::jahandle_ext::EchoTest;
+use jarust_plugins::AttachPluginParams;
 
 #[derive(uniffi::Object)]
 pub struct Session {
@@ -41,5 +44,25 @@ impl Session {
             }
         };
         Ok(Handle::new(handle, receiver))
+    }
+
+    pub async fn attach_echo_test(
+        &self,
+        timeout: Duration,
+    ) -> crate::JanusGatewayResult<EchotestHandle> {
+        let (handle, receiver) = match self
+            .inner
+            .attach_echo_test(AttachPluginParams { timeout })
+            .await
+        {
+            Ok(handle) => handle,
+            Err(why) => {
+                return Err(JanusGatewayError::HandleCreationFailure {
+                    plugin: "echotest".to_string(),
+                    reason: why.to_string(),
+                })
+            }
+        };
+        Ok(EchotestHandle::new(handle, receiver))
     }
 }
