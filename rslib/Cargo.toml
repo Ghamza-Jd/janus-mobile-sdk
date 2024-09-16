@@ -10,8 +10,10 @@ name = "janus_gateway"
 crate-type = ["cdylib", "staticlib", "lib"]
 
 [dependencies]
+jarust = "0.5.0"
 log = "0.4.22"
 log-panics = "2.1.0"
+thiserror = "1.0.63"
 tokio = "1.40.0"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
