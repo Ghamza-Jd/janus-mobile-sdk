@@ -14,6 +14,7 @@ import UniFFI
 /// sends.
 public final class JaEchoTestHandle {
     let handle: EchotestHandle
+    public var delegate: JaEchoTestHandleDelegate?
     private var continuation: AsyncStream<JaEchoTestEvent>.Continuation?
 
     /// Get an async stream of incoming Janus echotest events, check ``JaEchotestEvent``
@@ -85,10 +86,12 @@ public enum JaEchoTestEvent {
 
 extension JaEchoTestHandle: EchotestHandleCallback {
     public func onResult(echotest: String, result: String) {
+        delegate?.didReceive(echotest: echotest, result: result)
         continuation?.yield(.result(echotest: echotest, result: result))
     }
 
     public func onResultWithJsep(echotest: String, result: String, jsep: Jsep) {
+        delegate?.didRecieve(echotest: echotest, result: result, jsep: jsep)
         continuation?.yield(
             .resultWithJsep(echotest: echotest, result: result, jsep: jsep)
         )
