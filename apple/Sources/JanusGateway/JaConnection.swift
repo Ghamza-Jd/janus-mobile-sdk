@@ -5,6 +5,7 @@
 //  Created by Hamza Jadid on 16/09/2024.
 //
 
+import Foundation
 import UniFFI
 
 /// Connection with a Janus server
@@ -21,7 +22,7 @@ public struct JaConnection {
     ///     - config: Janus connection configuration
     /// - Returns: A connection with janus server
     public static func connect(config: JaConfig) async throws -> Self {
-        let connection = try await rawJarustConnect(config: config.lower)
+        let connection = try await rawJanusConnect(config: config.lower)
         return JaConnection(connection: connection)
     }
 
@@ -29,9 +30,11 @@ public struct JaConnection {
     ///
     /// - Parameters:
     ///     - kaInterval: The time interval (seconds) for session keep-alive requests
+    ///     - timeout: The maximum amount of time to wait on an acknowledgment before we consider
+    ///     the request as failed or times out.
     /// - Returns: The newly created session
-    public func createSession(kaInterval: UInt32) async throws -> JaSession {
-        let session = try await connection.createSession(kaInterval: kaInterval)
+    public func createSession(kaInterval: UInt32, timeout: TimeInterval) async throws -> JaSession {
+        let session = try await connection.createSession(kaInterval: kaInterval, timeout: timeout)
         return JaSession(session: session)
     }
 }
