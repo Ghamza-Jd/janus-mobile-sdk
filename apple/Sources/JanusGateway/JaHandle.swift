@@ -11,6 +11,7 @@ import UniFFI
 /// General purpose plugin handle
 public final class JaHandle {
     let handle: Handle
+    private let delegate: JaHandleDelegate?
     private var continuation: AsyncStream<String>.Continuation?
 
     /// Get an async stream of incoming Janus events for this handle
@@ -26,8 +27,9 @@ public final class JaHandle {
         }
     }
 
-    init(handle: Handle) {
+    init(handle: Handle, delegate: JaHandleDelegate? = nil) {
         self.handle = handle
+        self.delegate = delegate
     }
 
     /// Sends a message without waiting for any response or acknowledgment
@@ -75,6 +77,7 @@ public final class JaHandle {
 
 extension JaHandle: HandleCallback {
     public func onEvent(event: String) {
+        delegate?.didReceive(event: event)
         continuation?.yield(event)
     }
 }
