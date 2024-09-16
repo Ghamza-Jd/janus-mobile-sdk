@@ -6,4 +6,8 @@ pub enum JanusGatewayError {
     SessionCreationFailure { reason: String },
     #[error("Failed to attach ${plugin} handle, reason ${reason}")]
     HandleCreationFailure { plugin: String, reason: String },
+    #[error("Could not serialize ${body}")]
+    Serialize { body: String },
+    #[error("Failed to send ${reason}")]
+    SendFailure { reason: String },
 }

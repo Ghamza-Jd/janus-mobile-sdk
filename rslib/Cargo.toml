@@ -11,8 +11,11 @@ crate-type = ["cdylib", "staticlib", "lib"]
 
 [dependencies]
 jarust = "0.5.0"
+jarust_transport = "0.5.0"
 log = "0.4.22"
 log-panics = "2.1.0"
+serde = "1.0.210"
+serde_json = "1.0.128"
 thiserror = "1.0.63"
 tokio = "1.40.0"
 tracing = "0.1.40"
