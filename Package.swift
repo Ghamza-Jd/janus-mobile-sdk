@@ -8,15 +8,13 @@ let useLocalFramework = true
 let releaseTag = "0.1.0"
 let releaseChecksum = "0cd41f6d76d9d6f933871b1328d1689dbfd51fabbcbbc4f1d76164094bef083c"
 
-let binaryTarget: Target
-
-if useLocalFramework {
-    binaryTarget = .binaryTarget(
+let binaryTarget: Target = if useLocalFramework {
+    .binaryTarget(
         name: "JanusGatewayFFI",
         path: "./target/ios/libjanus_gateway-rs.xcframework"
     )
 } else {
-    binaryTarget = .binaryTarget(
+    .binaryTarget(
         name: "JanusGatewayFFI",
         url: "https://github.com/Proximie/jarust-ios-package/releases/download/\(releaseTag)/libjanus_gateway-rs.xcframework.zip",
         checksum: releaseChecksum
@@ -27,7 +25,6 @@ let package = Package(
     name: "JanusGateway",
     platforms: [.iOS(.v13)],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "JanusGateway",
             targets: ["JanusGateway"]
