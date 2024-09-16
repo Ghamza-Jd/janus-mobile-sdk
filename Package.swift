@@ -8,7 +8,9 @@ let useLocalFramework = true
 let releaseTag = "0.1.0"
 let releaseChecksum = "0cd41f6d76d9d6f933871b1328d1689dbfd51fabbcbbc4f1d76164094bef083c"
 
-let binaryTarget = if useLocalFramework {
+let binaryTarget: Target
+
+if useLocalFramework {
     binaryTarget = .binaryTarget(
         name: "JanusGatewayFFI",
         path: "./target/ios/libjanus_gateway-rs.xcframework"
