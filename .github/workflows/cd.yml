@@ -1,0 +1,27 @@
+name: Continuous Deployment
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  upgrade-release:
+    name: Upgrade draft release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upgrade release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch --tags
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          is_draft=$(gh release view $latest_tag --json isDraft --jq .isDraft)
+          if [ is_draft ]; then gh release edit $latest_tag --draft=false; fi
+          echo "Release upgraded to $latest_tag"
