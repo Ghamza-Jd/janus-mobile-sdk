@@ -195,12 +195,12 @@ which doesn't play well when publishing on remote. A work around for this limita
 <code>true</code> and return it back to <code>false</code> before pushing.</p>
 <h3 id="building"><a class="header" href="#building">Building</a></h3>
 <p>To generate swift bindings run:</p>
-<pre><code class="language-shell">./build-ios.sh
+<pre><code class="language-shell">make apple
 </code></pre>
 <p>This will generate the swift bindings and create an <code>xcframework</code> with the built rust static libraries.</p>
 <h3 id="releasing"><a class="header" href="#releasing">Releasing</a></h3>
 <p>Similar to the building command but we should pass <code>--release</code></p>
-<pre><code class="language-shell">./build-ios.sh --release
+<pre><code class="language-shell">make apple -- --release
 </code></pre>
 <p>This will create a ZIP archive of the <code>xcframework</code> and update <code>Package.swift</code> with the computed checksum.
 This is only needed when cutting a new release, not for local development.</p>
