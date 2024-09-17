@@ -26,7 +26,7 @@ which doesn't play well when publishing on remote. A work around for this limita
 To generate swift bindings run:
 
 ```shell
-./build-ios.sh
+make apple
 ```
 
 This will generate the swift bindings and create an `xcframework` with the built rust static libraries.
@@ -36,7 +36,7 @@ This will generate the swift bindings and create an `xcframework` with the built
 Similar to the building command but we should pass `--release`
 
 ```shell
-./build-ios.sh --release
+make apple -- --release
 ```
 
 This will create a ZIP archive of the `xcframework` and update `Package.swift` with the computed checksum.
